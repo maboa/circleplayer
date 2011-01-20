@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>jPlayer - Circle Player</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>   
+	<script type="text/javascript" src="js/jquery.rotate.js"></script>
+	<script type="text/javascript" src="js/jquery.jplayer.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){    
+		
+	  	var myPlayer = $("#jquery_jplayer_1");
+	
+		myPlayer.jPlayer({
+ 			ready: function () {
+          		$(this).jPlayer("setMedia", {
+    				m4a: "http://www.jplayer.org/audio/m4a/Miaow-07-Bubble.m4a",
+            		oga: "http://www.jplayer.org/audio/ogg/Miaow-07-Bubble.ogg"
+          		});
+        	},
+        	swfPath: "js",
+        	supplied: "m4a, oga"                 
+      	});    
+
+		function displayProgress(pc) {
+ 			var degs = pc * 3.6+"deg";          
+
+			if (pc <= 50) {   
+				$('#circle-holder').removeClass('gt50');
+				$('#progress1').css({rotate: degs}); 
+				$('#progress2').hide();     
+			}
+			else if (pc < 100) {
+				$('#circle-holder').addClass('gt50');     
+				$('#progress1').css({rotate: '180deg'}); 
+				$('#progress2').show();
+				$('#progress2').css({rotate: degs});
+			}   		
+		}
+
+		myPlayer.bind($.jPlayer.event.timeupdate, function(event) { 
+			var pc = event.jPlayer.status.currentPercentAbsolute; 
+            displayProgress(pc);
+		}); 
+		
+		myPlayer.bind($.jPlayer.event.ended, function() {   
+			$('#circle-holder').removeClass('gt50');     
+			$('#progress1').css({rotate: '0deg'}).show(); 
+			$('#progress2').css({rotate: '0deg'}).hide();
+		});  
+		
+		$('.click-control').click(function(event) {        
+			var self = $(this);
+			var x = event.pageX - self.offset().left - self.width()/2;  
+			var y = event.pageY - self.offset().top - self.height()/2;
+
+			var a = Math.atan2(y,x);  
+			if (a > -1*Math.PI && a < -0.5*Math.PI) {
+			   a = 2*Math.PI+a; 
+			} 
+			
+			// a is now value between -0.5PI and 1.5PI 
+			// ready to be normalized and applied
+  
+			var pc = (a + Math.PI/2) / 2*Math.PI * 10;
+			   
+            myPlayer.jPlayer("playHead", pc).jPlayer("play");  
+
+			return false;
+		});
+		
+    });
+	</script>
+  </head>
+  <body> 
+	<div id="jquery_jplayer_1" class="jp-jplayer"></div>
+	<div id="jp_interface_1" class="player">
+		<div id="circle-holder" class="hold"> <!-- .gt50 only needed when progress is > than 50% -->
+			<div id="progress1" class="progress">
+			</div>
+			<div id="progress2" class="progress fill" style="display:none"> <!-- this div, with extra .fill only needed when progress is > than 50% -->
+			</div>
+		</div>       
+		<div class="click-control"></div>
+		<ul class="jp-controls">
+			<li><a href="#" class="jp-play" tabindex="1">play</a></li>
+			<li><a href="#" class="jp-pause" style="display:none;" tabindex="1">pause</a></li>
+		</ul>
+	</div>
+  </body>
+</html>

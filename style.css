@@ -1,0 +1,122 @@
+/*
+ * Project: circular player
+ * http://www.jplayer.org
+ *
+ * Copyright (c) 2011 Happyworm Ltd
+ *
+ * Author: Silvia Benvenuti
+ * Date: 18th January 2011
+ * Arwork inspired by: http://forrst.com/posts/Untitled-CJz
+ */
+
+body {
+	background-color:#f0f0f0;
+}   
+
+:focus {
+	border:none; 
+	outline:0;
+}
+
+
+#jquery_jplayer_1 {
+	width: 0;
+	height: 0; 
+}
+
+.player {
+	position: relative;
+	width: 200px;
+	height: 200px;
+	background: url("graphics/bgr.jpg") 0 0 no-repeat;
+	margin: 0 auto;
+	padding: 48px;
+}
+
+.progress {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 104px;
+	height: 104px;
+	background: url("graphics/progress.png") 0 0 no-repeat;
+    clip:rect(0px,52px,104px,0px);
+    -moz-border-radius:52px;
+    -webkit-border-radius:52px;
+    border-radius:52px;
+   -moz-transform:rotate(0);
+   -webkit-transform:rotate(0);
+   -o-transform:rotate(0);
+   transform:rotate(0);
+
+/*  NO CSS3 FALLBACK 
+	(12 steps starting from 1hr filled progress, DEcrease second value by 104px for 	next step) 
+	
+	background: url("graphics/progress_sprite.jpg") 0 0 no-repeat; 
+*/
+}
+
+
+/* this is needed when progress is greater than 50% */
+.progress.fill {
+    -moz-transform:rotate(0deg);
+    -webkit-transform:rotate(0deg);
+    transform:rotate(0deg);
+    -o-transform:rotate(0deg);
+}
+
+.hold, .click-control {
+    position:absolute;
+    width:104px;
+    height:104px;
+} 
+
+.click-control:hover {
+	cursor:pointer;
+}
+
+.hold {
+    clip:rect(0px,104px,104px,52px);
+}
+
+
+/* this is needed when progress is greater than 50% */
+.hold.gt50 {
+    clip:rect(auto, auto, auto, auto);
+}  
+
+.jp-controls {
+	margin:26px;
+	padding: 0;
+}
+
+.jp-controls li{
+	list-style-type:none;
+	display: block;
+}
+
+.jp-controls li a{
+	position: relative;
+	display: block;
+	width:50px;
+	height:50px;
+	text-indent:-9999px;
+	z-index:1;
+}
+
+.jp-controls .jp-play {
+	background: url("graphics/controls.jpg") 0 0 no-repeat;
+}
+
+.jp-controls .jp-play:hover {
+	background: url("graphics/controls.jpg") -50px 0 no-repeat;
+	cursor:pointer;
+}
+
+.jp-controls .jp-pause {
+	background: url("graphics/controls.jpg") 0 -50px no-repeat;
+}
+
+.jp-controls .jp-pause:hover {
+	background: url("graphics/controls.jpg") -50px -50px no-repeat;
+}
