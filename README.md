@@ -11,8 +11,10 @@ Possibilities exist to enhance the demo with [https://wiki.mozilla.org/Audio_Dat
 
 Note the progress bar will not function correctly in Opera 11 due to a JIT compiler bug in the Opera browser : [http://twitter.com/dstorey/status/28108260418523137](http://twitter.com/dstorey/status/28108260418523137) 
 
-The demo's current look is heavily inspired by [http://forrst.com/posts/Untitled-CJz](http://forrst.com/posts/Untitled-CJz)
+The demo's current look is heavily inspired by [http://forrst.com/posts/Untitled-CJz](http://forrst.com/posts/Untitled-CJz)       
 
-CirclePlayer is dual-licensed under the BSD and MIT licenses
+Thanks to [http://twitter.com/quinnirill] (Jussi Kalliokoski) for contributing.
+
+CirclePlayer is dual-licensed under the GPL and MIT licenses
 
  
