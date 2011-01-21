@@ -1,3 +1,24 @@
+<!--
+ * circleplayer
+ *
+ * Authors :
+ * Mark Boas @maboa 
+ * Silvia Benvenuti @aulentina
+ * Jussi Kalliokoski @quinirill   
+ *   
+ * Inspired by :
+ * Neway @imneway http://imneway.net/ http://forrst.com/posts/Untitled-CPt
+ *
+ * Standing on the shoulders of :
+ * John Resig @jresig
+ * Mark Panaghiston @thepag
+ * Remy Sharp @rem
+ * Louis-Rémi Babé @Louis_Remi       
+ * 
+ * Dual Licensed GPL/MIT
+ *
+-->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -5,7 +26,8 @@
     <title>jPlayer - Circle Player</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>   
-	<script type="text/javascript" src="js/jquery.rotate.js"></script>
+	<script type="text/javascript" src="js/jquery.rotate.js"></script> 
+	<script type="text/javascript" src="js/jquery.mousehold.js"></script> 
 	<script type="text/javascript" src="js/jquery.jplayer.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){    
@@ -24,7 +46,7 @@
       	});    
 
 		function displayProgress(pc) {
- 			var degs = pc * 3.6+"deg";          
+ 			var degs = pc * 3.6+"deg";   
 
 			if (pc <= 50) {   
 				$('#circle-holder').removeClass('gt50');
@@ -37,37 +59,77 @@
 				$('#progress2').show();
 				$('#progress2').css({rotate: degs});
 			}   		
-		}
+		}  
+		
 
 		myPlayer.bind($.jPlayer.event.timeupdate, function(event) { 
-			var pc = event.jPlayer.status.currentPercentAbsolute; 
-            displayProgress(pc);
+			var pc = event.jPlayer.status.currentPercentAbsolute;
+			if (!dragging) { 
+            	displayProgress(pc);
+			}
 		}); 
 		
 		myPlayer.bind($.jPlayer.event.ended, function() {   
 			$('#circle-holder').removeClass('gt50');     
 			$('#progress1').css({rotate: '0deg'}).show(); 
 			$('#progress2').css({rotate: '0deg'}).hide();
-		});  
+		}); 
+		     
+		var dragging = false; // Indicates if the progressbar is being 'dragged'.
 		
-		$('.click-control').click(function(event) {        
-			var self = $(this);
-			var x = event.pageX - self.offset().left - self.width()/2;  
-			var y = event.pageY - self.offset().top - self.height()/2;
-
-			var a = Math.atan2(y,x);  
-			if (a > -1*Math.PI && a < -0.5*Math.PI) {
+		var clickControl = $('.click-control');      
+		
+		function getArcPc(event) { 
+			var	self	= clickControl,
+				offset	= self.offset(),
+				x	= event.pageX - offset.left - self.width()/2,
+				y	= event.pageY - offset.top - self.height()/2,
+				a	= Math.atan2(y,x);  
+				
+ 			if (a > -1*Math.PI && a < -0.5*Math.PI) {
 			   a = 2*Math.PI+a; 
 			} 
-			
-			// a is now value between -0.5PI and 1.5PI 
-			// ready to be normalized and applied
-  
-			var pc = (a + Math.PI/2) / 2*Math.PI * 10;
-			   
-            myPlayer.jPlayer("playHead", pc).jPlayer("play");  
 
+			// a is now value between -0.5PI and 1.5PI 
+			// ready to be normalized and applied   			
+			
+			var pc = (a + Math.PI/2) / 2*Math.PI * 10;   
+			   
+			return pc;
+		}
+
+		function onMouseUp(event) {  		
+            var pc = getArcPc(event);
+			myPlayer.jPlayer("playHead", pc).jPlayer("play");
+			$(document).unbind('mouseup', onMouseUp);
+            dragging = false;  
+				
 			return false;
+		};
+
+		clickControl.mousedown(function(event){
+			if (event.preventDefault){
+				event.preventDefault();
+			}  
+
+			$(document).bind('mouseup', onMouseUp);
+			return false;
+		});  
+		
+		// Can't figure out how to pass event through to mousehold so I made it global  
+		
+		var moveEvent;
+		
+		clickControl.mousemove(function(event){
+		   moveEvent = event;
+		});
+		
+		clickControl.mousehold(function(){  
+			var pc = getArcPc(moveEvent);
+			dragging = true;   
+			
+			myPlayer.jPlayer("playHead", pc).jPlayer("play");  // This bit does the scrubbing      
+			displayProgress(pc);			
 		});
 		
     });
