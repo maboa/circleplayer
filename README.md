@@ -13,7 +13,7 @@ Note the progress bar will not function correctly in Opera 11 due to a JIT compi
 
 The demo's current look is heavily inspired by [http://forrst.com/posts/Untitled-CJz](http://forrst.com/posts/Untitled-CJz)       
 
-Thanks to [Jussi Kalliokoski] (http://twitter.com/quinnirill) for contributing.
+Thanks to [Jussi Kalliokoski](http://twitter.com/quinnirill) for contributing.
 
 CirclePlayer is dual-licensed under the GPL and MIT licenses
 
