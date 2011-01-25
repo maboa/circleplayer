@@ -1,7 +1,9 @@
 ![CirclePlayer](https://github.com/maboa/circleplayer/raw/master/screencaps/circleplayer.png)
  
 CirclePlayer is a demo intended to showcase the jQuery HTML5 Media Library jPlayer
-[https://github.com/happyworm/jPlayer](https://github.com/happyworm/jPlayer)   
+[https://github.com/happyworm/jPlayer](https://github.com/happyworm/jPlayer) 
+
+[Try the latest version.](http://happyworm.com/jPlayerLab/circleplayer/)   
 
 Uses HTML5 Audio, CSS3 Transforms (transform:rotate) hooks provided by : [https://github.com/lrbabe/jquery.rotate.js](https://github.com/happyworm/jPlayer)
 
