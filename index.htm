@@ -22,7 +22,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"> 
+	<meta name="viewport" content="width=device-width; initial-scale=1.5; user-scalable:no;">
     <title>jPlayer - Circle Player</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>   
@@ -131,6 +132,8 @@
 			myPlayer.jPlayer("playHead", pc).jPlayer("play");  // This bit does the scrubbing      
 			displayProgress(pc);			
 		});
+		
+		document.addEventListener('touchmove', function(e){e.preventDefault();}, false);
 		
     });
 	</script>
