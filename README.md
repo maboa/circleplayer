@@ -1,4 +1,4 @@
-![CirclePlayer](http://web17.twitpic.com/img/227163900-cd5b989c2406718ed25a49d970f40bbb.4d38a250-full.png)
+![CirclePlayer](https://github.com/maboa/circleplayer/raw/master/screencaps/circleplayer.png)
  
 CirclePlayer is a demo intended to showcase the jQuery HTML5 Media Library jPlayer
 [https://github.com/happyworm/jPlayer](https://github.com/happyworm/jPlayer)   
