@@ -4,7 +4,7 @@
  * Authors :
  * Mark Boas @maboa 
  * Silvia Benvenuti @aulentina
- * Jussi Kalliokoski @quinirill   
+ * Jussi Kalliokoski @quinnirill   
  *   
  * Inspired by :
  * Neway @imneway http://imneway.net/ http://forrst.com/posts/Untitled-CPt
@@ -12,7 +12,6 @@
  * Standing on the shoulders of :
  * John Resig @jresig
  * Mark Panaghiston @thepag
- * Remy Sharp @rem
  * Louis-Rémi Babé @Louis_Remi       
  * 
  * Dual Licensed GPL/MIT
@@ -22,13 +21,13 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8"> 
-	<meta name="viewport" content="width=device-width; initial-scale=1.5; user-scalable:no;">
+    <meta charset="utf-8">    
+	<meta name="viewport" content="width=device-width; initial-scale=1.5; user-scalable:no;"> 
     <title>jPlayer - Circle Player</title>
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>   
-	<script type="text/javascript" src="js/jquery.rotate.js"></script> 
-	<script type="text/javascript" src="js/jquery.mousehold.js"></script> 
+	<script type="text/javascript" src="js/jquery.rotate.js"></script>
+	<script type="text/javascript" src="js/jquery.grab.js"></script> 
 	<script type="text/javascript" src="js/jquery.jplayer.min.js"></script>
 	<script type="text/javascript">
 	$(document).ready(function(){    
@@ -80,11 +79,11 @@
 		
 		var clickControl = $('.click-control');      
 		
-		function getArcPc(event) { 
+		function getArcPc(pageX, pageY) { 
 			var	self	= clickControl,
 				offset	= self.offset(),
-				x	= event.pageX - offset.left - self.width()/2,
-				y	= event.pageY - offset.top - self.height()/2,
+				x	= pageX - offset.left - self.width()/2,
+				y	= pageY - offset.top - self.height()/2,
 				a	= Math.atan2(y,x);  
 				
  			if (a > -1*Math.PI && a < -0.5*Math.PI) {
@@ -99,42 +98,20 @@
 			return pc;
 		}
 
-		function onMouseUp(event) {  		
-            var pc = getArcPc(event);
-			myPlayer.jPlayer("playHead", pc).jPlayer("play");
-			$(document).unbind('mouseup', onMouseUp);
-            dragging = false;  
-				
-			return false;
-		};
 
-		clickControl.mousedown(function(event){
-			if (event.preventDefault){
-				event.preventDefault();
-			}  
-
-			$(document).bind('mouseup', onMouseUp);
-			return false;
-		});  
-		
-		// Can't figure out how to pass event through to mousehold so I made it global  
-		
-		var moveEvent;
-		
-		clickControl.mousemove(function(event){
-		   moveEvent = event;
+		clickControl.grab({
+			onstart: function(){
+				dragging = true;
+			}, onmove: function(event){
+				var pc = getArcPc(event.position.x, event.position.y);
+				myPlayer.jPlayer("playHead", pc).jPlayer("play");
+				displayProgress(pc);
+			}, onfinish: function(event){
+				dragging = false;
+				var pc = getArcPc(event.position.x, event.position.y);
+				myPlayer.jPlayer("playHead", pc).jPlayer("play");
+			}
 		});
-		
-		clickControl.mousehold(function(){  
-			var pc = getArcPc(moveEvent);
-			dragging = true;   
-			
-			myPlayer.jPlayer("playHead", pc).jPlayer("play");  // This bit does the scrubbing      
-			displayProgress(pc);			
-		});
-		
-		document.addEventListener('touchmove', function(e){e.preventDefault();}, false);
-		
     });
 	</script>
   </head>
