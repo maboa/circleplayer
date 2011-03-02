@@ -129,11 +129,14 @@
 			var audio = $('#jquery_jplayer_1').data("jPlayer").htmlElement.audio;
 			var pc = 0;    
 			 
-			/* Fallback to  event.jPlayer.status.seekPercent; if buffered not supported? Not sure yet */
-			
+			// Fallback to event.jPlayer.status.seekPercent; if buffered not supported
+			 	
 			if((typeof audio.buffered === "object") && (audio.buffered.length > 0)) {
 				pc = (audio.duration > 0) ? 100 * audio.buffered.end(audio.buffered.length-1) / audio.duration : 100; 
 				displayBuffered(pc);
+			}
+			else {
+				pc = event.jPlayer.status.seekPercent; 
 			} 
 			
 			// Old buffering doesn't take account of different timeranges when user skips forward
