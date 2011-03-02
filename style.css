@@ -5,7 +5,7 @@
  * Copyright (c) 2011 Happyworm Ltd
  *
  * Author: Silvia Benvenuti
- * Date: 18th January 2011
+ * Date: 26th January 2011
  * Arwork inspired by: http://forrst.com/posts/Untitled-CJz
  */
 
@@ -34,13 +34,12 @@ body {
 	padding: 48px;
 }
 
-.progress {
+.buffer, .progress {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 104px;
 	height: 104px;
-	background: url("graphics/progress.png") 0 0 no-repeat;
     clip:rect(0px,52px,104px,0px);
     -moz-border-radius:52px;
     -webkit-border-radius:52px;
@@ -50,21 +49,39 @@ body {
    -o-transform:rotate(0);
    transform:rotate(0);
 
-/*  NO CSS3 FALLBACK 
-	(12 steps starting from 1hr filled progress, DEcrease second value by 104px for 	next step) 
+
+}
+
+.buffer {
+	background: url("graphics/buffer.png") 0 0 no-repeat;
+	-moz-transform:rotate(0);
+    -webkit-transform:rotate(0);
+    -o-transform:rotate(0);
+    transform:rotate(0);
+}     
+
+div .fallback {
 	
-	background: url("graphics/progress_sprite.jpg") 0 0 no-repeat; 
-*/
+	/* FALLBACK for .progress
+	   (24 steps starting from 1hr filled progress, Decrease second value by 104px for next step)     */ 
+
+	background: url("graphics/progress_sprite.jpg") no-repeat;
+	background-position: 0 104px; 
 }
 
+.progress {
+	background: url("graphics/progress.png") 0 0 no-repeat;
+} 
 
-/* this is needed when progress is greater than 50% */
-.progress.fill {
-    -moz-transform:rotate(0deg);
-    -webkit-transform:rotate(0deg);
-    transform:rotate(0deg);
-    -o-transform:rotate(0deg);
+
+/* this is needed when progress/buffer is greater than 50% */
+.progress.fill, .buffer.fill {
+    -moz-transform:rotate(0);
+    -webkit-transform:rotate(0);
+    transform:rotate(0);
+    -o-transform:rotate(0);
 }
+
 
 .hold, .click-control {
     position:absolute;
@@ -81,19 +98,22 @@ body {
 }
 
 
-/* this is needed when progress is greater than 50% */
-.hold.gt50 {
+/* this is needed when progress is greater than 50% or for fallback*/
+.hold.gt50, .progress.fallback{
     clip:rect(auto, auto, auto, auto);
 }  
 
 .jp-controls {
-	margin:26px;
-	padding: 0;
+    margin:0;
+    padding: 26px;
 }
 
 .jp-controls li{
 	list-style-type:none;
 	display: block;
+	
+	/*IE Fix*/  
+	height:0;
 }
 
 .jp-controls li a{
@@ -102,7 +122,7 @@ body {
 	width:50px;
 	height:50px;
 	text-indent:-9999px;
-	z-index:1;
+	z-index:1;      
 }
 
 .jp-controls .jp-play {

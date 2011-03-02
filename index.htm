@@ -4,10 +4,12 @@
  * Authors :
  * Mark Boas @maboa 
  * Silvia Benvenuti @aulentina
- * Jussi Kalliokoski @quinnirill   
+ * Jussi Kalliokoski @quinirill   
  *   
  * Inspired by :
- * Neway @imneway http://imneway.net/ http://forrst.com/posts/Untitled-CPt
+ * Neway @imneway http://imneway.net/ http://forrst.com/posts/Untitled-CPt   
+ * and
+ * Liam McKay @liammckay http://dribbble.com/shots/50882-Purple-Play-Pause
  *
  * Standing on the shoulders of :
  * John Resig @jresig
@@ -28,9 +30,14 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>   
 	<script type="text/javascript" src="js/jquery.rotate.js"></script>
 	<script type="text/javascript" src="js/jquery.grab.js"></script> 
-	<script type="text/javascript" src="js/jquery.jplayer.min.js"></script>
+	<script type="text/javascript" src="js/jquery.jplayer.js"></script>
+	<script type="text/javascript" src="js/mod.csstransforms.min.js"></script>
+	<!--<script type="text/javascript" src="https://getfirebug.com/firebug-lite.js"></script>-->       
+
 	<script type="text/javascript">
 	$(document).ready(function(){    
+		
+		var cssTransforms = Modernizr.csstransforms;
 		
 	  	var myPlayer = $("#jquery_jplayer_1");
 	
@@ -38,29 +45,75 @@
  			ready: function () {
           		$(this).jPlayer("setMedia", {
     				m4a: "http://www.jplayer.org/audio/m4a/Miaow-07-Bubble.m4a",
-            		oga: "http://www.jplayer.org/audio/ogg/Miaow-07-Bubble.ogg"
+            		oga: "http://www.jplayer.org/audio/ogg/Miaow-07-Bubble.ogg"  
+
+					// shorter files - useful for testing
+ 
+					/*mp3 : "http://www.jplayer.org/audio/mp3/TSP-13-Shmoort.mp3",
+                    oga : "http://www.jplayer.org/audio/ogg/TSP-13-Shmoort.ogg"*/
           		});
-        	},
+        	},   
+			solution: "html, flash",
         	swfPath: "js",
-        	supplied: "m4a, oga"                 
+        	supplied: "m4a, oga"
+            //errorAlerts: "true",
+			//warningAlerts: "true"
       	});    
 
 		function displayProgress(pc) {
+ 			var degs = pc * 3.6+"deg";     
+            
+			// 24 x 104px sprites    
+			var spriteOffset = (Math.floor((Math.round(pc))*0.24)-1)*-104;   
+
+			if (pc <= 50) {   
+				if (cssTransforms) {  
+					$('#circle-holder').removeClass('gt50'); 
+					$('#progress1').css({rotate: degs});   
+					$('#progress1').removeClass('fallback');      
+				}
+				else { // fall back
+				    if (spriteOffset <= 0) {
+						$('#circle-holder').addClass('gt50');
+						$('#progress1').addClass('fallback');    
+						$('#progress1').css('background-position', '0 '+spriteOffset+'px');   
+					}  
+				}
+			
+				$('#progress2').hide();     
+			}
+			else if (pc <= 100) {
+				$('#circle-holder').addClass('gt50');   
+				if (cssTransforms) {
+					$('#progress1').css({rotate: '180deg'}); 
+					$('#progress2').css({rotate: degs}); 
+					$('#progress2').show();    
+				}
+				else { // fall back  
+					$('#progress1').css('background-position', '0 '+spriteOffset+'px');
+				}
+			}		
+		}
+		
+		function displayBuffered(pc) {
  			var degs = pc * 3.6+"deg";   
 
 			if (pc <= 50) {   
-				$('#circle-holder').removeClass('gt50');
-				$('#progress1').css({rotate: degs}); 
-				$('#progress2').hide();     
+				$('#buffer-holder').removeClass('gt50');
+				$('#buffer1').css({rotate: degs}); 
+				$('#buffer2').hide();     
 			}
-			else if (pc < 100) {
-				$('#circle-holder').addClass('gt50');     
-				$('#progress1').css({rotate: '180deg'}); 
-				$('#progress2').show();
-				$('#progress2').css({rotate: degs});
-			}   		
-		}  
+			else if (pc <= 100) {
+				$('#buffer-holder').addClass('gt50');     
+				$('#buffer1').css({rotate: '180deg'}); 
+				$('#buffer2').show();
+				$('#buffer2').css({rotate: degs});
+			}		
+		}   
 		
+
+		
+        // This event fired as play time increments 
 
 		myPlayer.bind($.jPlayer.event.timeupdate, function(event) { 
 			var pc = event.jPlayer.status.currentPercentAbsolute;
@@ -68,11 +121,40 @@
             	displayProgress(pc);
 			}
 		}); 
+		          
+		// This event fired as buffered time increments  
 		
-		myPlayer.bind($.jPlayer.event.ended, function() {   
-			$('#circle-holder').removeClass('gt50');     
-			$('#progress1').css({rotate: '0deg'}).show(); 
-			$('#progress2').css({rotate: '0deg'}).hide();
+		myPlayer.bind($.jPlayer.event.progress, function(event) {    
+    			 
+			var audio = $('#jquery_jplayer_1').data("jPlayer").htmlElement.audio;
+			var pc = 0;    
+			 
+			/* Fallback to  event.jPlayer.status.seekPercent; if buffered not supported? Not sure yet */
+			
+			if((typeof audio.buffered === "object") && (audio.buffered.length > 0)) {
+				pc = (audio.duration > 0) ? 100 * audio.buffered.end(audio.buffered.length-1) / audio.duration : 100; 
+				displayBuffered(pc);
+			} 
+			
+			// Old buffering doesn't take account of different timeranges when user skips forward
+			
+			/*if ((audio.buffered != undefined) && (audio.buffered.length != 0))
+			{
+			 	pc = parseInt(((audio.buffered.end(0) / audio.duration) * 100), 10); 
+			  	displayBuffered(pc);  
+			}  */      
+			
+		});
+		
+		myPlayer.bind($.jPlayer.event.ended, function() {  
+			if (cssTransforms) {   
+				$('#circle-holder').removeClass('gt50');     
+				$('#progress1').css({rotate: '0deg'}).show(); 
+				$('#progress2').css({rotate: '0deg'}).hide();  
+			}
+			else {
+				$('#progress1').css('background-position', '0 104px');     
+			}  
 		}); 
 		     
 		var dragging = false; // Indicates if the progressbar is being 'dragged'.
@@ -98,7 +180,6 @@
 			return pc;
 		}
 
-
 		clickControl.grab({
 			onstart: function(){
 				dragging = true;
@@ -118,6 +199,12 @@
   <body> 
 	<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 	<div id="jp_interface_1" class="player">
+		<div id="buffer-holder" class="hold"> <!-- .gt50 only needed when buffer is > than 50% -->
+			<div id="buffer1" class="buffer">
+			</div>
+			<div id="buffer2" class="buffer fill" style="display:none"> <!-- this div, with extra .fill only needed when buffer is > than 50% -->
+			</div>
+		</div>       
 		<div id="circle-holder" class="hold"> <!-- .gt50 only needed when progress is > than 50% -->
 			<div id="progress1" class="progress">
 			</div>
