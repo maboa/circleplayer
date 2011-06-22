@@ -1,8 +1,12 @@
 /*
-jQuery grab
-Ported from Jin.js::gestures
+jQuery grab 
+https://github.com/jussi-kalliokoski/jQuery.grab
+Ported from Jin.js::gestures   
+https://github.com/jussi-kalliokoski/jin.js/
 Created by Jussi Kalliokoski
-Licensed under MIT License.
+Licensed under MIT License. 
+
+Includes fix for IE
 */
 
 
@@ -14,19 +18,12 @@ Licensed under MIT License.
 		touchstart	= 'touchstart',
 		touchmove	= 'touchmove',
 		touchend	= 'touchend',
-		touchcancel	= 'touchcancel',
-		gesturestart	= 'gesturestart',
-		gesturechange	= 'gesturechange',
-		gestureend	= 'gestureend',
-		gesturecancel	= 'gesturecancel',
-		MozTouchDown	= 'MozTouchDown',
-		MozTouchMove	= 'MozTouchMove',
-		MozTouchUp	= 'MozTouchUp',
-		mousewheel	= 'mousewheel',
-		DOMMouseScroll	= 'DOMMouseScroll';
-	
+		touchcancel	= 'touchcancel';
 
 	function unbind(elem, type, func){
+		if (type.substr(0,5) !== 'touch'){ // A temporary fix for IE8 data passing problem in Jin.
+			return $(elem).unbind(type, func);
+		}
 		var fnc, i;
 		for (i=0; i<bind._binds.length; i++){
 			if (bind._binds[i].elem === elem && bind._binds[i].type === type && bind._binds[i].func === func){
@@ -41,6 +38,9 @@ Licensed under MIT License.
 	}
 
 	function bind(elem, type, func, pass){
+		if (type.substr(0,5) !== 'touch'){ // A temporary fix for IE8 data passing problem in Jin.
+			return $(elem).bind(type, pass, func);
+		}
 		var fnc, i;
 		if (bind[type]){
 			return bind[type].bind(elem, type, func, pass);

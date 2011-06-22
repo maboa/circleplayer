@@ -1,0 +1,20 @@
+/*
+ * Project: CirclePlayer
+ * http://www.jplayer.org
+ *
+ * Copyright (c) 2011 Happyworm Ltd
+ *
+ * This CSS is for the demonstration page
+ *
+ * Author: Mark J Panaghiston
+ * Date: 6th May 2011
+ */
+
+body {
+	background-color:#f0f0f0;
+} 
+
+.prototype-wrapper {
+	width:200px;
+	margin: 0 auto;
+}
