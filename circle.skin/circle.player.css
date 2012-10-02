@@ -2,11 +2,11 @@
  * Project: CirclePlayer
  * http://www.jplayer.org
  *
- * Copyright (c) 2011 Happyworm Ltd
+ * Copyright (c) 2012 Happyworm Ltd
  *
  * Author: Silvia Benvenuti
  * Edited by: Mark J Panaghiston
- * Date: 6th May 2011
+ * Date: 2nd October 2012
  * Artwork inspired by: http://forrst.com/posts/Untitled-CJz
  */
 
@@ -108,6 +108,7 @@
 	height:50px;
 	text-indent:-9999px;
 	z-index:1;
+	cursor:pointer;
 }
 
 .cp-controls .cp-play {
