@@ -84,7 +84,7 @@
 
 .cp-buffer-holder.cp-gt50,
 .cp-progress-holder.cp-gt50,
-.cp-progress.cp-fallback{
+.cp-progress-1.cp-fallback{
 	clip:rect(auto, auto, auto, auto);
 }
 
